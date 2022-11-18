@@ -13,11 +13,14 @@ class HashTable(dict):
     def hash(self, key: str) -> str:
         return get_blake2b_hash(key, self.key_size_bytes, "hex")
 
+    def get_from_hash(self, hash: str, default: Optional[Any] = None) -> Union[None, Any]:
+        if hash in self.keys():
+            return dict.__getitem__(self, hash)
+        return default
+
     def get(self, key: str, default: Optional[Any] = None) -> Union[None, Any]:
         hash = self.hash(key)
-        if hash in self.keys():
-            return self[hash]
-        return default
+        return self.get_from_hash(hash)
 
     def __setitem__(self, key, value) -> None:
         dict.__setitem__(self, self.hash(key), value)

@@ -30,7 +30,5 @@ if __name__ == "__main__":
             device, hash, data = message
             assert n == data
             count += 1
-        print(count, len(databank.channel.out_buffer))
 
-    # out = db.channel.read_bytes()
-    # print(bytes(out))
+        print(count, len(databank.channel.out_buffer))

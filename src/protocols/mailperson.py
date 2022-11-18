@@ -12,14 +12,12 @@ class MailPerson:
 
     def encode_data(self, data, dtype):
         if dtype.name == "int":
-            pass
+            return bytes([data])
 
     def encode_message(self, device, hash, dtype, data):
-        if dtype == "int":
-            data = bytes([data])
-
         device = bytes(device, "utf-8")
         hash = bytes.fromhex(hash)
+        data = self.encode_data(data, dtype)
 
         payload = device + hash + data
 
@@ -74,9 +72,9 @@ class MailPerson:
             elif self._index < len(self.header) + self.device_size + self.hash_size:
                 self._hash.append(char)
                 # TODO: add a `get` function to the hash table that handles keyerror, or looks for key in keys() first
-                dtype = hash_table.get(hash.hex(), None)
-                if dtype is not None:
-                    self._data_size = dtype.nbytes
+                data_item = hash_table.get_from_hash(self._hash.hex(), None)
+                if data_item is not None:
+                    self._data_size = data_item.dtype.nbytes
                     if self._data_size is not None:
                         self._index += 1
                     else:
@@ -102,6 +100,7 @@ class MailPerson:
                 if self._checksum == test_checksum:
                     found = True
                 else:
+                    print("checksum failed")
                     reset = True
 
             if reset:
