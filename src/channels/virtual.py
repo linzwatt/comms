@@ -1,7 +1,9 @@
-from ..buffers.linked_list import FIFOLinkedList
 from typing import Any
 
-class VirtualChannel():
+from ..buffers.linked_list import FIFOLinkedList
+
+
+class VirtualChannel:
     def __init__(self, out_size: int = 4096, in_size: int = 4096, loopback: bool = False) -> None:
         super().__init__()
         self.loopback = loopback

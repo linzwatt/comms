@@ -1,63 +1,36 @@
-from typing import Any, Dict, Optional, Union
-import hashlib
-import time
-from functools import partial
-
-
-data_sizes = {
-    'int': 1
-}
-
-
-schemas = {
-    '00': {
-        'control': {
-            'position': 'int',
-            'velocity': 'int',
-            'estop': 'int'
-        },
-        'feedback': {
-            'position': 'int',
-            'velocity': 'int',
-            'status': 'int'
-        },
-        'info': {
-            'firmware_version': 'str'
-        }
-    }
-}
-
-
 if __name__ == "__main__":
-
-    # test_channel()
 
     import random
 
-    db = DataBank(schemas['00'])
+    from src.structures.databank import DataBank
+    from src.utils.schema import load_schema
 
-    vars = ['control.position', 'control.velocity', 'control.estop']
+    schema = load_schema("orion5_v1", "schemas/")
+
+    databank = DataBank(schema, key_size_bytes=4)
+
+    vars_to_change = ["control.position", "control.velocity", "control.estop"]
 
     count = 0
     while True:
-        var = random.choice(vars)
+        var = random.choice(vars_to_change)
         n = random.randint(0, 255)
-        db.set(var, n)
+        databank.set(var, n)
 
         if random.random() > 0.75:
-            db.channel.write_bytes(bytearray([random.randint(0, 255) for _ in range(random.randint(0, 100))]))
+            databank.channel.write_bytes(bytearray([random.randint(0, 255) for _ in range(random.randint(0, 100))]))
 
-        db.send()
+        databank.send()
 
         if random.random() > 0.75:
-            db.channel.write_bytes(bytearray([random.randint(0, 255) for _ in range(random.randint(0, 100))]))
+            databank.channel.write_bytes(bytearray([random.randint(0, 255) for _ in range(random.randint(0, 100))]))
 
-        message = db.receive()
+        message = databank.receive()
         if message is not None:
             device, hash, data = message
             assert n == data
             count += 1
-        print(count, len(db.channel.out_buffer))
+        print(count, len(databank.channel.out_buffer))
 
     # out = db.channel.read_bytes()
     # print(bytes(out))

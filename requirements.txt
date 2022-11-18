@@ -1,0 +1,5 @@
+PyYAML~=6.0.0
+
+# dev-dependancies
+pre-commit~=2.16.0
+setuptools~=50.3.2

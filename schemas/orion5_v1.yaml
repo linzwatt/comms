@@ -1,0 +1,13 @@
+control:
+  position: int(1)
+  velocity: int(1)
+  estop: int(1)
+
+feedback:
+  position: int(1)
+  velocity: int(1)
+  status: int(1)
+
+info:
+  firmware_version: int(1)
+  hardware_version: int(1)

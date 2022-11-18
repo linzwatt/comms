@@ -1,25 +1,29 @@
-from ..utils.hash import get_fletcher32_checksum
-from ..utils.sizes import data_sizes
 import time
 
+from ..utils.hash import get_fletcher32_checksum
 
-class MailPerson():
-    def __init__(self, device_size=2, hash_size=4, header='bork') -> None:
+
+class MailPerson:
+    def __init__(self, device_size=2, hash_size=4, header="bork") -> None:
         self.device_size = device_size
         self.hash_size = hash_size
         self.checksum_size = 4
         self.header = header
 
+    def encode_data(self, data, dtype):
+        if dtype.name == "int":
+            pass
+
     def encode_message(self, device, hash, dtype, data):
-        if dtype == 'int':
+        if dtype == "int":
             data = bytes([data])
 
-        device = bytes(device, 'utf-8')
+        device = bytes(device, "utf-8")
         hash = bytes.fromhex(hash)
 
         payload = device + hash + data
 
-        header = bytes('bork', 'utf-8')
+        header = bytes("bork", "utf-8")
         checksum = get_fletcher32_checksum(payload)
 
         return header + payload + checksum
@@ -51,7 +55,7 @@ class MailPerson():
 
             # header
             if self._index < len(self.header):
-                if (char == ord(self.header[self._index])):
+                if char == ord(self.header[self._index]):
                     self._index += 1
                 else:
                     reset = True
@@ -72,7 +76,7 @@ class MailPerson():
                 # TODO: add a `get` function to the hash table that handles keyerror, or looks for key in keys() first
                 dtype = hash_table.get(hash.hex(), None)
                 if dtype is not None:
-                    self._data_size = data_sizes.get(dtype.type, None)
+                    self._data_size = dtype.nbytes
                     if self._data_size is not None:
                         self._index += 1
                     else:
@@ -86,7 +90,9 @@ class MailPerson():
                 self._index += 1
 
             # checksum
-            elif self._index < len(self.header) + self.device_size + self.hash_size + self._data_size + self.checksum_size:
+            elif self._index < (
+                len(self.header) + self.device_size + self.hash_size + self._data_size + self.checksum_size
+            ):
                 self._checksum.append(char)
                 self._index += 1
 
@@ -106,4 +112,4 @@ class MailPerson():
             if found:
                 for _ in range(self._index):
                     buffer.pop()
-                return (self._device.decode('utf-8'), self._hash.hex(), int.from_bytes(self._data, 'little'))
+                return (self._device.decode("utf-8"), self._hash.hex(), int.from_bytes(self._data, "little"))

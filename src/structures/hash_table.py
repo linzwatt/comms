@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 from ..utils.hash import get_blake2b_hash
 
@@ -11,7 +11,7 @@ class HashTable(dict):
             self[key] = value
 
     def hash(self, key: str) -> str:
-        return get_blake2b_hash(key, self.key_size_bytes, 'hex')
+        return get_blake2b_hash(key, self.key_size_bytes, "hex")
 
     def get(self, key: str, default: Optional[Any] = None) -> Union[None, Any]:
         hash = self.hash(key)

@@ -1,13 +1,16 @@
 from typing import Any, Optional, Union
 
-class LinkedListNode():
+
+class LinkedListNode:
     def __init__(self, item: Any) -> None:
         self.item = item
         self.next: Node = None
 
+
 Node = Union[LinkedListNode, None]
 
-class FIFOLinkedList():
+
+class FIFOLinkedList:
     def __init__(self, max_size: Optional[int] = None) -> None:
         self.size = max_size
         self.head: Node = None
@@ -48,7 +51,7 @@ class FIFOLinkedList():
         if start is None:
             return None
 
-        return self.peek(i-1, start.next)
+        return self.peek(i - 1, start.next)
 
     def get_last_node(self, start) -> Node:
         if start is None:

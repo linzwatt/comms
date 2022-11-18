@@ -1,5 +1,6 @@
 import pytest
 
-class TestBuffers():
+
+class TestBuffers:
     def test_fifolinkedlist(self):
         from ..comms import FIFOLinkedList
